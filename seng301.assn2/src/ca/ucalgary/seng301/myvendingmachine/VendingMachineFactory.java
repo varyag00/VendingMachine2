@@ -1,3 +1,11 @@
+/* Name: 	J. Daniel Gonzalez
+ * UCID:	10058656
+ * Class:	SENG 301
+ * Ass:		2
+ * 
+ * Notes: Code from assignment 1 solution given out by instructor used in assignment 1
+ */
+
 package ca.ucalgary.seng301.myvendingmachine;
 
 import java.io.FileNotFoundException;
@@ -432,6 +440,9 @@ import ca.ucalgary.seng301.vendingmachine.parser.Parser;
  */
 
 public class VendingMachineFactory implements IVendingMachineFactory {
+	
+	VendingMachine vm;
+	
     public static void main(String[] args) throws ParseException, FileNotFoundException {
 	// You MAY NOT modify this method except to list your own scripts, as
 	// noted
@@ -442,12 +453,12 @@ public class VendingMachineFactory implements IVendingMachineFactory {
 
 	for(String script : goodScripts)
 	    try {
-		count++;
-		new VendingMachineFactory(script);
+			count++;
+			new VendingMachineFactory(script);
 	    }
 	    catch(Throwable t) {
-		t.printStackTrace();
-		System.err.println();
+			t.printStackTrace();
+			System.err.println();
 	    }
 
 	// TODO Modify this initializer to run your own bad scripts
@@ -455,15 +466,15 @@ public class VendingMachineFactory implements IVendingMachineFactory {
 
 	for(String script : badScripts)
 	    try {
-		count++;
-		new VendingMachineFactory(script);
+			count++;
+			new VendingMachineFactory(script);
 	    }
 	    catch(Throwable t) {
-		t.printStackTrace();
-		System.err.println();
+			t.printStackTrace();
+			System.err.println();
 	    }
 
-	System.err.println(count + " scripts executed");
+		System.err.println(count + " scripts executed");
     }
 
     public VendingMachineFactory(String path) throws ParseException, FileNotFoundException, DisabledException {
@@ -477,38 +488,37 @@ public class VendingMachineFactory implements IVendingMachineFactory {
 
     @Override
     public List<Object> extract() {
-	// TODO Replace this implementation
-	return new ArrayList<>();
+		return vm.extract();
     }
 
     @Override
     public void insert(int value) throws DisabledException {
-	// TODO
+    	vm.insert(value);
     }
 
     @Override
     public void press(int value) {
-	// TODO
+    	vm.press(value);
     }
 
     @Override
     public void construct(List<Integer> coinKinds, int selectionButtonCount, int coinRackCapacity, int popCanRackCapacity, int receptacleCapacity) {
-	// TODO
+    		//constructs a new vending machine with the given arguments
+    	vm = new VendingMachine(coinKinds, selectionButtonCount, coinRackCapacity, popCanRackCapacity, receptacleCapacity);
     }
 
     @Override
     public void configure(List<String> popNames, List<Integer> popCosts) {
-	// TODO
+    	vm.configure(popNames, popCosts);
     }
 
     @Override
     public void load(List<Integer> coinCounts, List<Integer> popCanCounts) {
-	// TODO
+    	vm.load(coinCounts, popCanCounts);
     }
 
     @Override
     public VendingMachineStoredContents unload() {
-	// TODO Replace this implementation
-	return new VendingMachineStoredContents();
+		return vm.unload();
     }
 }
