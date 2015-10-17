@@ -523,6 +523,7 @@ public class VendingMachineFactory implements IVendingMachineFactory {
     @Override
     public void configure(List<String> popNames, List<Integer> popCosts) {
     	vm.configure(popNames, popCosts);
+    	vm.disableSafety();
     }
 
     @Override

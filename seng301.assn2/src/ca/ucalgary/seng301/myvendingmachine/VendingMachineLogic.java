@@ -1,37 +1,65 @@
 package ca.ucalgary.seng301.myvendingmachine;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import ca.ucalgary.seng301.vendingmachine.Coin;
 import ca.ucalgary.seng301.vendingmachine.PopCan;
 import ca.ucalgary.seng301.vendingmachine.VendingMachineStoredContents;
-import ca.ucalgary.seng301.vendingmachine.hardware.CoinRack;
+import ca.ucalgary.seng301.vendingmachine.hardware.CoinSlot;
+import ca.ucalgary.seng301.vendingmachine.hardware.DeliveryChute;
 import ca.ucalgary.seng301.vendingmachine.hardware.DisabledException;
-import ca.ucalgary.seng301.vendingmachine.hardware.PopCanRack;
 import ca.ucalgary.seng301.vendingmachine.hardware.VendingMachine;
 
 public class VendingMachineLogic {
 		
 	private VendingMachine vm;
     private VendingMachineStoredContents vmStoredContents;
+    
 
     	//sets the corresponding vending machine this class' methods will act upon
 	public VendingMachineLogic(VendingMachine vm){
 		this.vm = vm;
 	}
     
-    	//TODO
     public void press(int value){
+    		//error checking
+    	if (value < 0)
+		    throw new IllegalArgumentException("Value cannot be negative or null");
+    	if (value >= vm.getNumberOfSelectionButtons())
+		    throw new IllegalArgumentException("Value cannot be greater than number of selection buttons");
+
+    		//press the button... I dare you (not linked so nothing actually happens)
+    	vm.getSelectionButton(value).press();
+
+    	//sb.register(listener);
+
+    	
+    	//need to manually make the machine dispense change and pop to the delivery chute
+    	//if (vm.getCoinReceptacle().)
+    	//{
+	    	//get the pop can rack corresponding to the button that was pressed
+	    	//PopCanRack pcr = vm.getPopCanRack(value);
+	    	//pcr.dispensePop();
+	    	//pcr.re
+	    	
+    	//}
     	
     }
     
-    	//TODO
     public void insert(int value) throws DisabledException {
-    
+    	
+    	//error checking
+    	if (value <= 0)
+    		throw new IllegalArgumentException("Coin value must be positive");
+    	
+    	CoinSlot cs = vm.getCoinSlot();
+    	Coin coin = new Coin(value);
+    	
+    	cs.addCoin(coin);
     }
     
-		//TODO
     public void load(List<Integer> coinCounts, List<Integer> popCanCounts) {
     	
 		if(coinCounts == null || popCanCounts == null || coinCounts.size() < 0 || popCanCounts.size() < 0)
@@ -53,12 +81,10 @@ public class VendingMachineLogic {
     		popCanCountsArray[i] = count;
     		i++;
     	}
-    	vm.loadCoins(popCanCountsArray);	
+    	vm.loadPops(popCanCountsArray);	
     }
 	
-    	//TODO
     public VendingMachineStoredContents unload() {
-    	// TODO Replace this implementation
         	
     	vmStoredContents = new VendingMachineStoredContents(); 
     	
@@ -87,11 +113,13 @@ public class VendingMachineLogic {
 		return vmStoredContents;
     }
     
-    
-    
-	//TODO
 	public List<Object> extract(){
-		return new ArrayList<>();
+		
+		DeliveryChute dc = vm.getDeliveryChute();
+		List<Object> chuteList;
+		chuteList = Arrays.asList(dc.removeItems());
+	
+		return chuteList;
 	}
 
 
