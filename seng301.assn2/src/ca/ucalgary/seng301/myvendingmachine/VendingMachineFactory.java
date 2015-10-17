@@ -15,6 +15,7 @@ import java.util.List;
 
 import ca.ucalgary.seng301.vendingmachine.IVendingMachineFactory;
 import ca.ucalgary.seng301.vendingmachine.VendingMachineStoredContents;
+import ca.ucalgary.seng301.vendingmachine.hardware.VendingMachine;
 import ca.ucalgary.seng301.vendingmachine.hardware.DisabledException;
 import ca.ucalgary.seng301.vendingmachine.parser.ParseException;
 import ca.ucalgary.seng301.vendingmachine.parser.Parser;
@@ -442,6 +443,7 @@ import ca.ucalgary.seng301.vendingmachine.parser.Parser;
 public class VendingMachineFactory implements IVendingMachineFactory {
 	
 	VendingMachine vm;
+	VendingMachineLogic vmLogic;
 	
     public static void main(String[] args) throws ParseException, FileNotFoundException {
 	// You MAY NOT modify this method except to list your own scripts, as
@@ -488,23 +490,34 @@ public class VendingMachineFactory implements IVendingMachineFactory {
 
     @Override
     public List<Object> extract() {
-		return vm.extract();
+		return vmLogic.extract();
     }
 
     @Override
     public void insert(int value) throws DisabledException {
-    	vm.insert(value);
+    	vmLogic.insert(value);
     }
 
     @Override
     public void press(int value) {
-    	vm.press(value);
+    	vmLogic.press(value);
     }
 
     @Override
     public void construct(List<Integer> coinKinds, int selectionButtonCount, int coinRackCapacity, int popCanRackCapacity, int receptacleCapacity) {
+    	
+    		//conform to VendingMachine's constructor
+    	int[] coinKindsArray = new int[coinKinds.size()];
+    	int i = 0;
+    	for (Integer kind : coinKinds){
+    		coinKindsArray[i] = kind;
+    		i++;
+    	}
+    	
     		//constructs a new vending machine with the given arguments
-    	vm = new VendingMachine(coinKinds, selectionButtonCount, coinRackCapacity, popCanRackCapacity, receptacleCapacity);
+    	vm = new VendingMachine(coinKindsArray, selectionButtonCount, coinRackCapacity, popCanRackCapacity, receptacleCapacity);
+    	
+    	vmLogic = new VendingMachineLogic(vm);
     }
 
     @Override
@@ -514,11 +527,11 @@ public class VendingMachineFactory implements IVendingMachineFactory {
 
     @Override
     public void load(List<Integer> coinCounts, List<Integer> popCanCounts) {
-    	vm.load(coinCounts, popCanCounts);
+    	vmLogic.load(coinCounts, popCanCounts);
     }
 
     @Override
     public VendingMachineStoredContents unload() {
-		return vm.unload();
+		return vmLogic.unload();
     }
 }
